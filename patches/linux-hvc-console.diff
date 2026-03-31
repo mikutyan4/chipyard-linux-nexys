@@ -1,0 +1,31 @@
+# Linux kernel config changes for Nexys Video FPGA
+#
+# File: software/firemarshal/boards/prototype/linux/.config
+#
+# Why:
+# - RocketNexysVideoConfig disables standard UART (WithNoUART), so Linux
+#   cannot use ttyS0. Instead, enable the SBI console driver (hvc0).
+# - Force kernel command line to use hvc0 + SBI earlycon.
+# - nowatchdog: FPGA runs at 50MHz, initramfs decompression takes long
+#   enough to trigger soft lockup warnings.
+#
+# How to apply: modify the corresponding lines in linux/.config, or run:
+#   scripts/config --enable RISCV_SBI_V01
+#   scripts/config --enable HVC_RISCV_SBI
+#   scripts/config --enable SERIAL_EARLYCON_RISCV_SBI
+#   scripts/config --set-str CMDLINE "console=hvc0 earlycon=sbi loglevel=4 nowatchdog"
+#   scripts/config --enable CMDLINE_FORCE
+
+# Required config changes:
+CONFIG_RISCV_SBI_V01=y
+CONFIG_HVC_RISCV_SBI=y
+CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
+CONFIG_CMDLINE="console=hvc0 earlycon=sbi loglevel=4 nowatchdog"
+CONFIG_CMDLINE_FORCE=y
+
+# Original default values (for reference):
+# CONFIG_RISCV_SBI_V01 is not set
+# CONFIG_HVC_RISCV_SBI is not set
+# CONFIG_SERIAL_EARLYCON_RISCV_SBI is not set
+# CONFIG_CMDLINE="console=ttyS0 console=ttySIF0 earlycon"
+# CONFIG_CMDLINE_FORCE is not set

@@ -1,0 +1,37 @@
+From: chipyard-linux-nexys
+Subject: [PATCH] lib: sbi: Fix console getchar return value validation
+
+SBI_EXT_0_1_CONSOLE_GETCHAR returns the character value (0-255) or -1
+if no character is available. The existing error code range check
+[-8, 0] incorrectly rejects valid character return values, causing
+"Invalid error NNN" messages and breaking keyboard input when running
+Linux via SBI console.
+
+Skip the error code validation for CONSOLE_GETCHAR only.
+
+Applies to: software/firemarshal/boards/prototype/firmware/opensbi
+Based on OpenSBI commit: 5ccebf0 (v1.2 era)
+
+---
+ lib/sbi/sbi_ecall.c | 8 ++++++--
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/lib/sbi/sbi_ecall.c b/lib/sbi/sbi_ecall.c
+index d0f0166..cce4338 100644
+--- a/lib/sbi/sbi_ecall.c
++++ b/lib/sbi/sbi_ecall.c
+@@ -120,7 +120,13 @@ int sbi_ecall_handler(struct sbi_trap_regs *regs)
+ 		trap.epc = regs->mepc;
+ 		sbi_trap_redirect(regs, &trap);
+ 	} else {
+-		if (ret < SBI_LAST_ERR || SBI_SUCCESS < ret) {
++		/*
++		 * SBI_EXT_0_1_CONSOLE_GETCHAR is special: it returns
++		 * the character value (0-255) or -1 if no char available,
++		 * not an SBI error code. Skip the error check for it.
++		 */
++		if (extension_id != SBI_EXT_0_1_CONSOLE_GETCHAR &&
++		    (ret < SBI_LAST_ERR || SBI_SUCCESS < ret)) {
+ 			sbi_printf("%s: Invalid error %d for ext=0x%lx "
+ 				   "func=0x%lx\n", __func__, ret,
+ 				   extension_id, func_id);
