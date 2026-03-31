@@ -2,7 +2,9 @@
 
 Run interactive Linux on Nexys Video FPGA (Artix-7 XC7A200T) with Chipyard's Rocket Core.
 
-Companion code for the Zhihu article: [Boot Linux on FPGA — Practice Guide]()
+Companion code for the Zhihu articles:
+- [Boot Linux on FPGA — Practice Guide](https://zhuanlan.zhihu.com/p/2022437802986468833)
+- [Why Chipyard: A Shorter Path to Full-Stack RISC-V](https://zhuanlan.zhihu.com/p/2013942351115077134)
 
 ---
 
