@@ -1,0 +1,28 @@
+# OpenSBI: Enable custom extensions (RoCC) in mstatus
+#
+# File: software/firemarshal/boards/prototype/firmware/opensbi/lib/sbi/sbi_hart.c
+# Function: mstatus_init()
+#
+# Why:
+# - Gemmini (and any RoCC accelerator) is accessed via custom instructions.
+# - mstatus.XS must be set to non-zero to allow S-mode and U-mode to
+#   execute custom instructions. Without this, any RoCC instruction
+#   triggers an Illegal Instruction exception.
+#
+# How to apply:
+#   In mstatus_init(), after the existing mstatus_val assignments
+#   (FS for FPU, VS for vector), add:
+#
+#     /* Enable custom extensions (RoCC/Gemmini) */
+#     mstatus_val |= MSTATUS_XS;
+
+--- a/lib/sbi/sbi_hart.c
++++ b/lib/sbi/sbi_hart.c
+@@ -48,6 +48,9 @@
+ 	if (misa_extension('V'))
+ 		mstatus_val |=  MSTATUS_VS;
+
++	/* Enable custom extensions (RoCC/Gemmini) */
++	mstatus_val |=  MSTATUS_XS;
++
+ 	csr_write(CSR_MSTATUS, mstatus_val);

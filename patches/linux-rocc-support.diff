@@ -1,0 +1,18 @@
+# Linux kernel config: Enable RoCC custom instruction access from user space
+#
+# File: software/firemarshal/boards/prototype/linux/.config
+#
+# Why:
+# - Gemmini (and any RoCC accelerator) uses custom RISC-V instructions.
+# - The kernel must set sstatus.XS = Initial when creating new processes,
+#   otherwise user-space programs cannot execute custom instructions.
+# - Without this, RoCC instructions cause SIGILL (Illegal Instruction).
+#
+# How to apply:
+#   scripts/config --enable RISCV_ROCC
+
+# Required config change:
+CONFIG_RISCV_ROCC=y
+
+# Original default value (for reference):
+# CONFIG_RISCV_ROCC is not set

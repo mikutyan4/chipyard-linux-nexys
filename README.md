@@ -1,14 +1,14 @@
 # chipyard-linux-nexys
 
-Run interactive Linux on Nexys Video FPGA (Artix-7 XC7A200T) with Chipyard's Rocket Core.
+Run interactive Linux with Gemmini hardware acceleration on Nexys Video FPGA (Artix-7 XC7A200T) using Chipyard's Rocket Core.
 
 Companion code for the Zhihu articles:
-- [Boot Linux on FPGA — Practice Guide](https://zhuanlan.zhihu.com/p/2022437802986468833)
 - [Why Chipyard: A Shorter Path to Full-Stack RISC-V](https://zhuanlan.zhihu.com/p/2013942351115077134)
+- [Boot Linux on FPGA — Practice Guide](https://zhuanlan.zhihu.com/p/2022437802986468833)
 
 ---
 
-## Quick Start (~10 minutes)
+## Quick Start: Boot Linux (~10 minutes)
 
 No Vivado synthesis or kernel compilation required.
 
@@ -53,23 +53,53 @@ Wait ~4 minutes for transfer. Log in with `root` / `fpga` when `buildroot login:
 
 ---
 
-## Full Build (compile from source)
+## Gemmini: Hardware-Accelerated LLM Inference
+
+Run int8-quantized LLM inference on a Gemmini 8x8 systolic array attached to Rocket Core via RoCC.
+
+See [`gemmini-llm/README.md`](gemmini-llm/README.md) for full instructions.
+
+### Key results (Nexys Video, 50MHz)
+
+| Version | Cycles (8 tokens) | Speedup |
+|---------|-------------------|---------|
+| CPU int8 | 1,633,777 | 1.0x |
+| Gemmini int8 (optimized) | 163,474 | **10.0x** |
+
+MatMul speedup: **75x**. Overall limited by CPU-bound operations (Amdahl's law).
+
+### Gemmini setup
+
+1. Append `patches/nexysvideo-gemmini-config.scala` to your `Configs.scala`
+2. Apply `patches/opensbi-mstatus-xs.diff` (enable RoCC in OpenSBI)
+3. Apply `patches/linux-rocc-support.diff` (enable `CONFIG_RISCV_ROCC`)
+4. Synthesize Bitstream with `GemminiNexysVideoConfig`
+5. Quantize model: `python3 gemmini-llm/quantize.py stories15M.bin model_int8.bin`
+6. Build: `make -C gemmini-llm CHIPYARD=~/chipyard llm`
+7. Package into initramfs or use SD card (`GemminiNexysVideoSDConfig`)
+
+---
+
+## Full Build: Compile from Source
 
 For users who want to modify the kernel config or hardware design.
 
 ### Apply patches
 
 ```bash
-# 1. OpenSBI patch (fix console getchar return value validation bug)
+# 1. OpenSBI: fix console getchar return value validation
 cd ~/chipyard/software/firemarshal/boards/prototype/firmware/opensbi
 git apply /path/to/patches/opensbi-sbi_ecall-getchar-fix.patch
 
-# 2. Linux kernel config
-# Refer to patches/linux-hvc-console.diff and modify linux/.config accordingly
+# 2. OpenSBI: enable RoCC custom extensions (required for Gemmini)
+# Apply patches/opensbi-mstatus-xs.diff manually (see file for instructions)
 
-# 3. Configs.scala (optional, for synthesizing FastUART Bitstream yourself)
-# Append patches/nexysvideo-fastuart-config.scala to:
-# ~/chipyard/fpga/src/main/scala/nexysvideo/Configs.scala
+# 3. Linux kernel config: SBI console + RoCC support
+# Refer to patches/linux-hvc-console.diff and patches/linux-rocc-support.diff
+
+# 4. Configs.scala: FastUART and/or Gemmini configurations
+# Append patches/nexysvideo-fastuart-config.scala to Configs.scala
+# Append patches/nexysvideo-gemmini-config.scala for Gemmini support
 ```
 
 ### Build Linux image
@@ -89,19 +119,43 @@ make PLATFORM=generic \
      -j$(nproc)
 ```
 
+### Synthesize Bitstream
+
+```bash
+cd ~/chipyard && source env.sh
+
+# Rocket-only (for Boot Linux articles)
+make -C fpga SUB_PROJECT=nexysvideo CONFIG=RocketNexysVideoFastUARTConfig bitstream
+
+# Rocket + Gemmini (for Gemmini articles)
+make -C fpga SUB_PROJECT=nexysvideo CONFIG=GemminiNexysVideoConfig bitstream
+
+# Rocket + Gemmini + SD card
+make -C fpga SUB_PROJECT=nexysvideo CONFIG=GemminiNexysVideoSDConfig bitstream
+```
+
 ---
 
 ## File Structure
 
 ```
-├── uart_tsi_interactive/     # Interactive UART-TSI tool (original, not upstream)
+├── uart_tsi_interactive/     # Interactive UART-TSI tool (custom, not upstream)
 │   ├── testchip_uart_tsi_interactive.h
 │   ├── testchip_uart_tsi_interactive.cc
 │   └── Makefile
+├── gemmini-llm/              # Gemmini-accelerated LLM inference
+│   ├── llama2_int8_gemmini.c #   Main inference code
+│   ├── llama2_int8_x86.c    #   x86 verification build
+│   ├── quantize.py           #   Offline int8 quantization script
+│   ├── Makefile              #   Cross-compilation for RISC-V
+│   └── README.md
 ├── patches/
-│   ├── opensbi-sbi_ecall-getchar-fix.patch   # OpenSBI bug fix
-│   ├── linux-hvc-console.diff                # Linux kernel config changes
-│   └── nexysvideo-fastuart-config.scala      # Chipyard FastUART config
+│   ├── opensbi-sbi_ecall-getchar-fix.patch   # OpenSBI console getchar bug fix
+│   ├── opensbi-mstatus-xs.diff              # OpenSBI: enable RoCC extensions
+│   ├── linux-hvc-console.diff                # Linux: SBI console config
+│   ├── linux-rocc-support.diff              # Linux: RoCC user-space access
+│   ├── nexysvideo-fastuart-config.scala      # Chipyard: 921600 baud UART
+│   └── nexysvideo-gemmini-config.scala       # Chipyard: Gemmini + SD configs
 └── prebuilt/                 # Prebuilt binaries (download from Releases)
     ├── fw_payload.elf
     └── NexysVideoHarness_FastUART.bit
@@ -127,4 +181,5 @@ Supported options:
 | Chipyard | v1.13.0 (commit 33182611) |
 | OpenSBI | v1.2 |
 | Linux | 6.6.0 |
+| Gemmini | 8x8 systolic array, int8, Weight Stationary |
 | Target board | Digilent Nexys Video (Artix-7 XC7A200T) |
