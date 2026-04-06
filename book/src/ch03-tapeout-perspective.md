@@ -10,7 +10,7 @@ This chapter is not a step-by-step how-to. Instead, it draws a "map": where Chip
 
 A digital chip goes through roughly the following stages from design to final tapeout:
 
-![Full ASIC tapeout flow](流片流程.png)
+![Full ASIC tapeout flow](流片流程_en.png)
 
 Let's walk through what each stage does.
 
@@ -72,7 +72,7 @@ Commercial chips use a large amount of analog IP: DDR PHYs, SerDes, PLLs, IO dri
 
 The solution is FPGA bridging: the chip side retains only a simple digital interface, and an FPGA handles the DDR controller, external memory, and even test stimulus generation. The chip interacts with the FPGA through this digital interface, effectively offloading analog IO functions.
 
-![FPGA companion board bridging scheme](FPGA伴随.png)
+![FPGA companion board bridging scheme](FPGA伴随_en.png)
 
 This is exactly the typical use case for the SerialTL interface. Chipyard's SerialTL can be thought of as a "host protocol": the FPGA runs a TSI server that handles memory reads/writes and program loading; the chip side sends requests over SerialTL, accessing DDR on the FPGA side as if it were local memory. The entire scheme is already implemented in Chipyard's FPGA support -- no additional development is needed.
 

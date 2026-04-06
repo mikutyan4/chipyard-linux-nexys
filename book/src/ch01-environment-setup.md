@@ -28,7 +28,7 @@ The compilation flow is: Chisel source code -> FIRRTL (a hardware intermediate r
 
 This series will not dive deep into Chisel syntax, but if you want to learn it systematically, the recommended resource is UCB's official [Chisel Bootcamp](https://github.com/freechipsproject/chisel-bootcamp) -- Jupyter Notebook format, runnable online. A Chinese translation by the Tsinghua Chengying project team is available at [chisel-bootcamp Chinese version](https://github.com/reoLantern/chisel-bootcamp).
 
-![Chisel to FIRRTL to Verilog compilation flow diagram](chisel-compile-flow.png)
+![Chisel to FIRRTL to Verilog compilation flow diagram](chisel-compile-flow_en.png)
 
 ### Main Directory Structure
 
