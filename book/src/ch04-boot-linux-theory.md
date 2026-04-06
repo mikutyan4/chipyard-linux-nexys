@@ -1,7 +1,5 @@
 # Chapter 4: Booting Linux on an FPGA -- A Field Guide (Theory)
 
-Enough preamble -- here is the end result:
-
 ![Linux boot demo on FPGA](linux_boot_demo.gif)
 
 ![FPGA development board and host PC](board_and_pc.jpg)

@@ -6,7 +6,7 @@
 
 Last chapter we got the environment set up and verified the toolchain. This time we're doing something pretty cool: **running a real RISC-V application on a processor that's simulated entirely in software**.
 
-If you follow the ysyx route, getting your first program to run on a processor is typically a semester-long journey. With Chipyard, you can do it today. You'll see "Hello world from core 0, a rocket" printed in your terminal -- output from a full RISC-V processor core, all running on your own machine.
+Building a processor from scratch and getting your first program to run on it is typically a semester-long journey. With Chipyard, you can do it today. You'll see "Hello world from core 0, a rocket" printed in your terminal -- output from a full RISC-V processor core, all running on your own machine.
 
 The simulator we'll use is Verilator -- open-source and free. Anyone can follow along; no commercial EDA license required.
 
