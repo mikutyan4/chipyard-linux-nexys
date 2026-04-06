@@ -44,11 +44,11 @@ At its core, what this series built is a **framework**. When you want to dive de
 
 ## III. Why I Wrote This Series
 
-Chipyard is an excellent open-source architecture research platform, continuously maintained by the Berkeley team for many years. But I noticed that the Chinese-language community never had a sufficiently complete tutorial -- one that could take you all the way from environment setup to running accelerator applications on an FPGA. Scattered posts exist, but stitching together the entire pipeline involves a tremendous number of pitfalls.
+Chipyard is an excellent open-source architecture research platform, continuously maintained by the Berkeley team for many years. But I noticed there was never a sufficiently complete end-to-end tutorial -- one that could take you all the way from environment setup to running accelerator applications on an FPGA. Scattered posts exist, but stitching together the entire pipeline involves a tremendous number of pitfalls.
 
-The original motivation for this series was to fill that gap: to create content that couldn't be found anywhere else online, but that would genuinely help people.
+The original motivation for this series was to fill that gap: to create content that couldn't easily be found elsewhere, but that would genuinely help people.
 
-Halfway through writing, I actually hesitated, thinking maybe no one would read it and my time was already tight. It was the feedback and encouragement from readers in the comments section that kept me going until the content was complete. Thank you all.
+Halfway through writing, I actually hesitated, thinking maybe no one would read it and my time was already tight. It was feedback and encouragement from readers that kept me going until the content was complete. Thank you all.
 
 ---
 
@@ -58,7 +58,7 @@ If you followed this series all the way through, what you now have is a **comple
 
 What you do next depends on your own research direction. Here are a few active and potentially fruitful areas on this platform: design space exploration of accelerator dataflows (WS/OS/hybrid), hardware-software co-designed quantization strategies (e.g., hardware-aware mixed-precision), scratchpad and DMA scheduling optimization, and end-to-end verification of custom RoCC accelerators. All of these can be pursued directly on the system we've built, without setting up the environment from scratch.
 
-If you've hit new pitfalls during reproduction, adapted to a new FPGA board, or gotten a new model or application running, feel free to share in the comments or open an Issue or PR on the GitHub repo. The reason Chinese-language Chipyard resources are scarce is that many people encounter problems but few share their solutions -- a single tip from you could save someone else an entire day of debugging.
+If you've hit new pitfalls during reproduction, adapted to a new FPGA board, or gotten a new model or application running, feel free to open an Issue or PR on the GitHub repo. Many people encounter problems but few share their solutions -- a single tip from you could save someone else an entire day of debugging.
 
 Best of luck.
 
