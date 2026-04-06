@@ -1,0 +1,15 @@
+[book]
+authors = ["mikutyan4"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Chipyard RISC-V Tutorial: From Environment Setup to LLM Inference on FPGA"
+
+[build]
+build-dir = "docs"
+
+[output.html]
+default-theme = "light"
+preferred-dark-theme = "navy"
+git-repository-url = "https://github.com/mikutyan4/chipyard-linux-nexys"
+edit-url-template = "https://github.com/mikutyan4/chipyard-linux-nexys/edit/master/book/{path}"
