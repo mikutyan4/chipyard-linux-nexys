@@ -2,7 +2,7 @@
 
 ## 1. Introduction
 
-Starting from this chapter, we get our hands dirty. The prerequisite is that everything from the prep chapter is already in place -- WSL2 is running, the TUN proxy is on, and VSCode is connected to WSL2.
+Starting from this chapter, we get our hands dirty. The prerequisite is that everything from the prep chapter is already in place -- WSL2 is running and VSCode is connected to WSL2.
 
 This chapter covers two things: first, understand how Chipyard is organized from a high level; then get the environment up and running. The operations themselves are not complicated -- mostly waiting. But if you don't know what each step is doing, the waiting becomes painful, and when something goes wrong you won't know where to look.
 
@@ -26,7 +26,7 @@ Verilog describes "a specific circuit," while Chisel describes "a program that c
 
 The compilation flow is: Chisel source code -> FIRRTL (a hardware intermediate representation, analogous to IR in a software compiler) -> standard Verilog, produced by the CIRCT toolchain. Once you have Verilog, you can plug into any industry-standard backend tool flow (VCS simulation, Design Compiler synthesis, Innovus place-and-route) -- there is no difference from a design written directly in Verilog.
 
-This series will not dive deep into Chisel syntax, but if you want to learn it systematically, the recommended resource is UCB's official [Chisel Bootcamp](https://github.com/freechipsproject/chisel-bootcamp) -- Jupyter Notebook format, runnable online. A Chinese translation by the Tsinghua Chengying project team is available at [chisel-bootcamp Chinese version](https://github.com/reoLantern/chisel-bootcamp).
+This series will not dive deep into Chisel syntax, but if you want to learn it systematically, the recommended resource is UCB's official [Chisel Bootcamp](https://github.com/freechipsproject/chisel-bootcamp) -- Jupyter Notebook format, runnable online.
 
 ![Chisel to FIRRTL to Verilog compilation flow diagram](chisel-compile-flow_en.png)
 
@@ -77,7 +77,7 @@ This script performs the following steps in order:
 
 **Step 5: Install CIRCT.** The compiler backend for Chisel, responsible for converting FIRRTL into standard Verilog.
 
-The whole process takes 1--3 hours, depending on network speed and machine performance. Keep the TUN proxy on; no extra action is needed -- just wait.
+The whole process takes 1--3 hours, depending on network speed and machine performance. Just wait.
 
 ---
 

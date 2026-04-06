@@ -30,7 +30,7 @@ The two tasks are independent and can be debugged separately -- once the bitstre
 
 Booting Linux on RISC-V involves four layers:
 
-![软件栈四层结构](软件栈四层结构_en.png)
+![Software stack structure](软件栈四层结构_en.png)
 
 Before explaining each layer, let's clarify the concept of *privilege levels* -- it is the key to understanding the entire stack.
 
@@ -64,7 +64,7 @@ There is an elegant design choice in this process: after power-on, the processor
 
 There is one more piece of the puzzle to understand: how does a character output by `printf` inside Linux end up appearing on your host terminal?
 
-![控制台 IO 路径](控制台路径_en.png)
+![Console IO path](控制台路径_en.png)
 
 Between the processor on the FPGA and the host, there is only a single UART wire. But UART is a very simple serial protocol -- it can only carry a byte stream, with no addressing and no commands. To allow the host to both read/write the FPGA's memory (for program loading) and relay console I/O, Chipyard runs a protocol called **TSI (Tethered Serial Interface)** over this wire. The host sends TSI commands like "write value Y to address X," and the hardware on the FPGA side parses the command and performs the corresponding memory operation.
 
