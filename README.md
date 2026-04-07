@@ -6,6 +6,9 @@ Companion code for the Zhihu articles:
 - [Why Chipyard: A Shorter Path to Full-Stack RISC-V](https://zhuanlan.zhihu.com/p/2013942351115077134)
 - [Boot Linux on FPGA — Practice Guide](https://zhuanlan.zhihu.com/p/2022437802986468833)
 
+Companion github book page:
+- [Chipyard RISC-V Tutorial: From Environment Setup to LLM Inference on FPGA](https://mikutyan4.github.io/chipyard-linux-nexys/)
+
 ---
 
 ## Quick Start: Boot Linux (~10 minutes)
